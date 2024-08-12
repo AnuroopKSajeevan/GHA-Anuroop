@@ -1,0 +1,44 @@
+name: Spring demo GHA
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/master'
+    steps:
+      - name: checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup JDK
+        uses: actions/setup-java@v3
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+
+      - name: Build
+        run: mvn clean install
+
+      - name: Test
+        run: mvn test
+        if: ${{contains(github.event.head_commit.message, 'test commit')}}
+
+      - name: Check results
+        run:
+          echo "event = ${{github.event_name}}"
+          echo "Repository = ${{github.repository}}"
+          echo "Job ID = ${{github.job}}"
+          echo "Run ID = ${{github.run_id}}"
+          echo "user = ${{github.actor}}"
+
+
+      - name: Upload JAR to github
+        if: ${{ success() && github.actor == 'AnuroopKSajeevan' }}
+        uses: actions/upload-artifact@v3
+        with:
+          name: my-app
+          path: target/*.jar
