@@ -13,11 +13,11 @@ public class WebConfig {
         return new WebMvcConfigurer() {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
-                registry.addMapping("/api/**") // Adjusted mapping to handle sub-paths
-                        .allowedOrigins("https://reactfrontend-bzhwfub9avdfachg.southindia-01.azurewebsites.net") // Corrected URL without trailing slash
-                        .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
-                        .allowedHeaders("*")
-                        .allowCredentials(true);
+                registry.addMapping("/api/*") // Allow CORS for all API endpoints
+                        .allowedOrigins("http://localhost:3000") // Allow requests from your React app
+                        .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS") // Allow specific HTTP methods
+                        .allowedHeaders("*") // Allow all headers
+                        .allowCredentials(true); // Allow credentials (e.g., cookies, authorization headers)
             }
         };
     }
